@@ -1,0 +1,55 @@
+@startuml диаграмма_компонентов
+
+!theme mars
+skinparam shadowing true
+skinparam roundcorner 18
+skinparam backgroundcolor #F5F5DC
+skinparam component {
+  BorderColor black
+  FontColor black
+}
+skinparam package {
+  BorderColor black
+  FontColor black
+}
+
+package "Frontend (Vue 3)" #FFFACD {
+  component "SPA (Vue Router + Vuex + i18n)" as VueSPA #FFE4B5
+  component "Vuetify UI Components" as VuetifyUI #FFDAB9
+  component "HTTP Client (Axios)" as HttpClient #FFB6C1
+  component "Image Cropper (1:1, resize)" as Cropper #E6E6FA
+  VueSPA -down-> VuetifyUI
+  VueSPA -down-> HttpClient
+  VueSPA -down-> Cropper
+}
+
+package "Backend (FastAPI)" #D8BFD8 {
+  component "API Controllers" as API #B0E0E6
+  component "Auth Service" as AuthSvc #C1FFC1
+  component "Recipe Service" as RecipeSvc #C1FFC1
+  component "Favorite Service" as FavSvc #C1FFC1
+  component "File Upload Handler" as FileHandler #FFDAB9
+  component "Cursor Pagination / Search" as Pagination #E6E6FA
+  API -down-> AuthSvc
+  API -down-> FileHandler
+  API -down-> RecipeSvc
+  API -down-> FavSvc
+  API -down-> Pagination
+}
+
+database "PostgreSQL" as DB #ADD8E6 {
+  component "users" #B0E0E6
+  component "recipes" #B0E0E6
+  component "favorites" #B0E0E6
+}
+
+database "Railway Volume\n(static/uploads)" as Volume #F0E68C
+
+HttpClient -down-> API : REST / Bearer
+RecipeSvc -down-> DB
+FavSvc -down-> DB
+AuthSvc -down-> DB
+FileHandler -right-> Volume : save file
+API .left.> Volume : serve /static/uploads
+
+@enduml

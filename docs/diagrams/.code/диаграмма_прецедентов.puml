@@ -1,0 +1,67 @@
+@startuml диаграмма_прецедентов
+
+!theme mars
+left to right direction
+
+skinparam shadowing true
+skinparam roundcorner 18
+skinparam backgroundcolor #F5F5DC
+skinparam actorStyle hollow
+
+actor "Пользователь" as User #pink
+
+package "Аутентификация" #FFE4B5 {
+  usecase "Регистрация" as UC_Register
+  usecase "Вход в систему" as UC_Login
+  usecase "Выход из системы" as UC_Logout
+}
+
+package "Управление рецептами" #C1FFC1 {
+  usecase "Создание рецепта" as UC_Create
+  usecase "Редактирование рецепта" as UC_Edit
+  usecase "Удаление рецепта" as UC_Delete
+  usecase "Загрузка фото с кропом 1:1" as UC_Image
+  UC_Create ..> UC_Image : <<include>>
+  UC_Edit ..> UC_Image : <<include>>
+}
+
+package "Просмотр и навигация" #FFDAB9 {
+  usecase "Лента рецептов (пагинация)" as UC_Feed
+  usecase "Бесконечная прокрутка" as UC_Scroll
+  usecase "Детальный просмотр рецепта" as UC_Detail
+  UC_Feed ..> UC_Scroll : <<extend>>
+}
+
+package "Поиск и фильтры" #E6E6FA {
+  usecase "Поиск по названию/ингредиентам" as UC_Search
+  usecase "Фильтр по дате" as UC_DateFilter
+}
+
+package "Избранное" #FFB6C1 {
+  usecase "Добавить/удалить из избранного" as UC_FavToggle
+  usecase "Просмотр избранного" as UC_ViewFav
+}
+
+package "Профиль и настройки" #B0E0E6 {
+  usecase "Смена пароля" as UC_ChangePwd
+  usecase "Просмотр профиля" as UC_Profile
+  usecase "Смена языка (ru/en)" as UC_Lang
+}
+
+User --> UC_Register
+User --> UC_Login
+User --> UC_Logout
+User --> UC_Create
+User --> UC_Edit
+User --> UC_Delete
+User --> UC_Feed
+User --> UC_Detail
+User --> UC_Search
+User --> UC_DateFilter
+User --> UC_FavToggle
+User --> UC_ViewFav
+User --> UC_ChangePwd
+User --> UC_Profile
+User --> UC_Lang
+
+@enduml

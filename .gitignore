@@ -1,3 +1,6 @@
 # docs
 *.docx
-docs/diagrams/
+# docs/diagrams/
+
+# logs
+*.log

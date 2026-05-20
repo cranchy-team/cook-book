@@ -1,0 +1,49 @@
+@startuml сиквенс_диаграмма_регистрация_и_вход
+!theme mars
+
+' НАСТРОЙКИ
+skinparam actor {
+  FontStyle bold
+  BackgroundColor #FFB6C1
+}
+skinparam participant {
+  FontColor black
+  FontStyle bold
+}
+skinparam database {
+  FontStyle bold
+  BackgroundColor #ADD8E6
+}
+skinparam backgroundcolor #F5F5DC
+skinparam roundcorner 18
+skinparam actorStyle hollow
+
+' УЧАСТНИКИ
+actor "Пользователь" as User #pink
+participant "Frontend\n(Vue)" as Frontend #FFE4B5
+participant "Backend API\n(FastAPI)" as Backend #B0E0E6
+database "PostgreSQL" as DB #ADD8E6
+
+' РЕГИСТРАЦИЯ
+User ++ #pink
+User -> Frontend ++ #FFE4B5 : Заполняет email/пароль,\nнажимает "Регистрация" 
+Frontend -> Backend --++ #B0E0E6 : POST /auth/register\n{email, password}
+Backend -> DB --++ #ADD8E6 : Проверить email\n(уникальность)
+DB --> Backend --++ #B0E0E6 : ok / exists
+Backend -> DB --++ #ADD8E6 : INSERT users\n(bcrypt hash)
+DB --> Backend --++ #B0E0E6 : user_id
+Backend --> Frontend --++ #FFE4B5 : 201 Created {user_id}
+Frontend --> User : Уведомление,\nпереход к форме входа
+
+' АВТОРИЗАЦИЯ
+User -> Frontend : Вводит email/пароль,\nнажимает "Войти"
+Frontend -> Backend --++ #B0E0E6 : POST /auth/login
+Backend -> DB --++ #ADD8E6 : SELECT hashed_password
+DB --> Backend --++ #B0E0E6 : hash
+Backend -> Backend : bcrypt.verify()
+note right #FFE4B5 : Проверка пароля
+Backend --> Frontend --++ #FFE4B5 : 200 OK\n{access_token}
+Frontend -> Frontend : Сохранить токен,\nнастроить axios
+Frontend --> User : Редирект на главную (/)
+
+@enduml
