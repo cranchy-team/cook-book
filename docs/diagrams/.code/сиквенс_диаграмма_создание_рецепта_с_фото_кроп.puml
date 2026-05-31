@@ -1,7 +1,6 @@
 @startuml сиквенс_диаграмма_создание_рецепта_с_фото_кроп
 !theme mars
 
-' НАСТРОЙКИ
 skinparam actor {
   FontStyle bold
   BackgroundColor #FFB6C1
@@ -18,14 +17,12 @@ skinparam backgroundcolor #F5F5DC
 skinparam roundcorner 18
 skinparam actorStyle hollow
 
-' УЧАСТНИКИ
-actor "Пользователь" as User
+actor "Юзер" as User
 participant "Frontend\n(RecipeForm + Cropper)" as Frontend #FFDAB9
-participant "Backend API" as Backend #B0E0E6
+participant "Recipe Service\n(FastAPI)" as RecipeSvc #FFC067
 database "PostgreSQL" as DB #ADD8E6
-database "Railway Volume" as Volume #F0E68C
+database "Docker Volume" as Volume #F0E68C
 
-' СЦЕНАРИЙ
 User ++ #FFB6C1
 Frontend ++ #FFDAB9
 User -> Frontend : Открыть диалог,\nзаполнить поля
@@ -33,17 +30,18 @@ Frontend -> Frontend : Валидация
 User -> Frontend : Выбрать файл изображения
 Frontend -> Frontend : Кроп 1:1, сжатие до 1200x1200
 User -> Frontend : Нажать "Сохранить"
-Frontend -> Backend --++ #B0E0E6 : POST /recipes (JSON)
-Backend -> DB --++ #ADD8E6 : INSERT recipes (user_id из токена)
-DB --> Backend --++ #B0E0E6 : recipe_id
-Backend --> Frontend --++ #FFDAB9 : 201 Created {recipe_id}
-Frontend -> Backend --++ #B0E0E6 : POST /recipes/{id}/image (multipart)
-Backend -> Backend: Проверка типа, размера
-Backend -> Volume --++ #F0E68C : Сохранить файл
-Volume --> Backend --++ #B0E0E6 : OK
-Backend -> DB --++ #ADD8E6 : UPDATE recipes SET image_path
-DB --> Backend --++ #B0E0E6 : OK
-Backend --> Frontend --++  #FFDAB9 : 200 OK {image_path}
-Frontend --> User: Показать рецепт в ленте
+Frontend -> RecipeSvc --++ #FFC067 : POST /recipes (JSON + JWT cookie)
+RecipeSvc -> RecipeSvc : Проверить JWT -> user_id
+RecipeSvc -> DB --++ #ADD8E6 : INSERT recipes (user_id)
+DB --> RecipeSvc --++ #FFC067 : recipe_id
+RecipeSvc --> Frontend --++ #FFDAB9 : 201 Created {recipe_id}
+Frontend -> RecipeSvc --++ #FFC067 : POST /recipes/{id}/image (multipart)
+RecipeSvc -> RecipeSvc : Проверка типа, размера
+RecipeSvc -> Volume --++ #F0E68C : Сохранить файл
+Volume --> RecipeSvc --++ #FFC067 : OK
+RecipeSvc -> DB --++ #ADD8E6 : UPDATE recipes SET image_path
+DB --> RecipeSvc --++ #FFC067 : OK
+RecipeSvc --> Frontend --++  #FFDAB9 : 200 OK {image_path}
+Frontend --> User : Показать рецепт в ленте
 
 @enduml

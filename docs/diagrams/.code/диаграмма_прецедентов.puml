@@ -8,7 +8,7 @@ skinparam roundcorner 18
 skinparam backgroundcolor #F5F5DC
 skinparam actorStyle hollow
 
-actor "Пользователь" as User #pink
+actor "Юзер" as User #pink
 
 package "Аутентификация" #FFE4B5 {
   usecase "Регистрация" as UC_Register

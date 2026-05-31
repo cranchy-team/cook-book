@@ -1,7 +1,6 @@
 @startuml сиквенс_диаграмма_пагинация_с_курсором_и_поиском
 !theme mars
 
-' НАСТРОЙКИ
 skinparam actor {
   FontStyle bold
 }
@@ -17,38 +16,36 @@ skinparam backgroundcolor #F5F5DC
 skinparam roundcorner 18
 skinparam actorStyle hollow
 
-' УЧАСТНИКИ
-actor "Пользователь" as User #FFB6C1
+actor "Юзер" as User #FFB6C1
 participant "Frontend\n(RecipeList)" as Frontend #FFDAB9
-participant "Backend API" as Backend #B0E0E6
+participant "Recipe Service\n(FastAPI)" as RecipeSvc #FFC067
 database "PostgreSQL" as DB #ADD8E6
 
-' СЦЕНАРИЙ
 User ++ #FFB6C1
 Frontend ++ #FFDAB9
 User -> Frontend : Открыть главную (/)
-Frontend -> Backend --++ #B0E0E6 : GET /recipes?limit=12
-Backend -> DB --++ #ADD8E6 : SELECT ... ORDER BY created_at DESC, id LIMIT 13
-DB --> Backend --++ #B0E0E6 : 12 элементов + флаг
-Backend -> Backend : Закодировать cursor
-Backend --> Frontend --++ #FFDAB9 : {items, next_cursor}
+Frontend -> RecipeSvc --++ #FFC067 : GET /recipes?limit=12
+RecipeSvc -> DB --++ #ADD8E6 : SELECT ... ORDER BY created_at DESC, id LIMIT 13
+DB --> RecipeSvc --++ #FFC067 : 12 элементов + флаг
+RecipeSvc -> RecipeSvc : Закодировать cursor
+RecipeSvc --> Frontend --++ #FFDAB9 : {items, next_cursor}
 Frontend -> Frontend : Отобразить карточки + кнопка
 Frontend --> User : Показать ленту
 
 User -> Frontend : Нажать "Загрузить ещё"
-Frontend -> Backend --++ #B0E0E6 : GET /recipes?cursor={next_cursor}
-Backend -> Backend : Декодировать cursor
-Backend -> DB --++ #ADD8E6 : WHERE (created_at, id) < (значения) LIMIT 12
-DB --> Backend --++ #B0E0E6 : следующие 12
-Backend --> Frontend --++ #FFDAB9 : {items, next_cursor}
+Frontend -> RecipeSvc --++ #FFC067 : GET /recipes?cursor={next_cursor}
+RecipeSvc -> RecipeSvc : Декодировать cursor
+RecipeSvc -> DB --++ #ADD8E6 : WHERE (created_at, id) < (значения) LIMIT 12
+DB --> RecipeSvc --++ #FFC067 : следующие 12
+RecipeSvc --> Frontend --++ #FFDAB9 : {items, next_cursor}
 Frontend -> Frontend : Добавить карточки в конец
 Frontend --> User : Обновлённая лента
 
 User -> Frontend : Ввести поиск "пицца" + даты
-Frontend -> Backend --++ #B0E0E6 : GET /recipes?search=пицца&date_from=...&date_to=...
-Backend -> DB --++ #ADD8E6 : ILIKE + диапазон дат
-DB --> Backend --++ #B0E0E6 : отфильтрованные рецепты
-Backend --> Frontend --++ #FFDAB9 : {items, next_cursor}
+Frontend -> RecipeSvc --++ #FFC067 : GET /recipes?search=пицца&date_from=...&date_to=...
+RecipeSvc -> DB --++ #ADD8E6 : ILIKE + диапазон дат
+DB --> RecipeSvc --++ #FFC067 : отфильтрованные рецепты
+RecipeSvc --> Frontend --++ #FFDAB9 : {items, next_cursor}
 Frontend --> User : Отобразить результаты поиска
 
 @enduml

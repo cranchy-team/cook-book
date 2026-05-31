@@ -1,7 +1,6 @@
 @startuml сиквенс_диаграмма_добавление_в_избранное_и_просмотр_избранного
 !theme mars
 
-' НАСТРОЙКИ
 skinparam actor {
   FontStyle bold
   BackgroundColor #FFB6C1
@@ -18,29 +17,28 @@ skinparam backgroundcolor #F5F5DC
 skinparam roundcorner 18
 skinparam actorStyle hollow
 
-' УЧАСТНИКИ
-actor "Пользователь" as User
+actor "Юзер" as User
 participant "Frontend\n(RecipeCard)" as Frontend #FFDAB9
-participant "Backend API" as Backend #B0E0E6
+participant "Recipe Service\n(FastAPI)" as RecipeSvc #FFC067
 database "PostgreSQL" as DB #ADD8E6
 
-' СЦЕНАРИЙ
 User ++ #FFB6C1
 Frontend ++ #FFDAB9
 
 User -> Frontend : Нажать на иконку "❤️"
 Frontend -> Frontend : Оптимистичное обновление UI
-Frontend -> Backend --++ #B0E0E6 : POST /recipes/{id}/favorite
-Backend -> DB --++ #ADD8E6 : INSERT INTO favorites
-DB --> Backend --++ #B0E0E6 : OK
-Backend --> Frontend --++ #FFDAB9 : 200 OK
+Frontend -> RecipeSvc --++ #FFC067 : POST /recipes/{id}/favorite (JWT cookie)
+RecipeSvc -> RecipeSvc : Проверить JWT -> user_id
+RecipeSvc -> DB --++ #ADD8E6 : INSERT INTO favorites
+DB --> RecipeSvc --++ #FFC067 : OK
+RecipeSvc --> Frontend --++ #FFDAB9 : 200 OK
 Frontend --> User -- : Отображение "в избранном"
 
 User -> Frontend ++ #FFDAB9 : Перейти в "Избранное" (хедер)
-Frontend -> Backend --++ #B0E0E6 : GET /recipes?favorites_only=true&limit=12
-Backend -> DB --++ #ADD8E6 : SELECT ... JOIN favorites
-DB --> Backend --++ #B0E0E6 : список рецептов + is_favorite=true
-Backend --> Frontend --++ #FFDAB9 : {items, next_cursor}
+Frontend -> RecipeSvc --++ #FFC067 : GET /recipes?favorites_only=true&limit=12
+RecipeSvc -> DB --++ #ADD8E6 : SELECT ... JOIN favorites
+DB --> RecipeSvc --++ #FFC067 : список рецептов + is_favorite=true
+RecipeSvc --> Frontend --++ #FFDAB9 : {items, next_cursor}
 Frontend -> Frontend : Отобразить ленту избранных
 Frontend --> User : Показать результаты
 
