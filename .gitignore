@@ -1,6 +1,32 @@
-# docs
-*.docx
-# docs/diagrams/
+# GENERAL
+
+# ide
+.vscode
+.idea
+
+# env
+.env
+.env.local
+.env.*.local
+
+# docker
+volumes/
 
 # logs
 *.log
+
+# docs
+*.docx
+
+
+# GO
+
+# binaries
+*.exe
+*.test
+
+# output
+*.out
+
+# dependency
+vendor/
