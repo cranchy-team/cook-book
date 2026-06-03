@@ -251,10 +251,12 @@
 **Миграции**: два сервиса миграций (`migrate-auth`, `migrate-recipe`), которые выполняются до запуска основных сервисов (используется `depends_on` с условием или скрипт entrypoint). Для Python-миграций используется `alembic upgrade head`, для Go - `migrate -path ./migrations -database "$DATABASE_URL" up`.
 
 **Swagger доступен**:
+
 - Auth Service: `http://localhost:8000/swagger/index.html`
 - Recipe Service: `http://localhost:8080/docs` и `http://localhost:8080/redoc`
 
 **Переменные окружения** задаются в `.env` файле:
+
 - `DATABASE_URL` (общая для обоих сервисов)
 - `JWT_SECRET` (общий секрет)
 - `UPLOAD_DIR=/app/static/uploads`
@@ -263,6 +265,7 @@
 - `ADMINER_PORT=8081`
 
 **Пример структуры**:
+
 ```
 cook-book/
 ├── auth/
