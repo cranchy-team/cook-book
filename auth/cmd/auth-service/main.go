@@ -23,7 +23,14 @@ func main() {
 	if err != nil {
 		log.Fatalf("Ошибка подключения к базе данных: %v", err)
 	}
-	_ = db
+
+	sqlDB, err := db.DB()
+	if err != nil {
+		log.Fatalf("Ошибка получения объекта БД: %v", err)
+	}
+	if err := sqlDB.Ping(); err != nil {
+		log.Fatalf("Ошибка пинга БД: %v", err)
+	}
 
 	log.Println("Сервис аутентификации запускается...")
 
