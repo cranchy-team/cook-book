@@ -15,7 +15,7 @@ volumes/
 # logs
 *.log
 
-# docs
+# project docs/specs
 *.docx
 
 
@@ -30,3 +30,9 @@ volumes/
 
 # dependency
 vendor/
+
+# swagger docs
+auth/docs/
+
+# build artifacts
+auth/auth-service
