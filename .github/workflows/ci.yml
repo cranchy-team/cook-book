@@ -19,7 +19,7 @@ jobs:
       - run: npm install -g markdownlint-cli
       - run: markdownlint '**/*.md' --config .markdownlint.yml
 
-  # линтинг сервиса auth (при условии, что есть go.mod)
+  # линтинг go-сервиса auth
   go-lint:
     runs-on: ubuntu-latest
     defaults:
@@ -29,14 +29,14 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-go@v5
         with:
-          go-version: "1.25.5"
+          go-version: "1.25.0"
           cache-dependency-path: auth/go.sum
-      - name: Run golangci-lint
-        uses: golangci/golangci-lint-action@v6
-        with:
-          version: latest
-          working-directory: auth
-          args: --config .golangci.yml
+      - name: Install staticcheck
+        run: go install honnef.co/go/tools/cmd/staticcheck@latest
+      - name: Run go vet
+        run: go vet ./...
+      - name: Run staticcheck
+        run: staticcheck ./...
 
   # # линтинг сервиса recipe (при условии, что есть requirements.txt или pyproject.toml)
   # python-lint:
