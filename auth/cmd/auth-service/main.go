@@ -4,6 +4,10 @@ import (
 	"log"
 
 	"github.com/cook-book/auth/internal/config"
+	"github.com/cook-book/auth/internal/handler"
+	"github.com/cook-book/auth/internal/middleware"
+	"github.com/cook-book/auth/internal/repository"
+	"github.com/cook-book/auth/internal/service"
 	"github.com/gin-gonic/gin"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
@@ -16,6 +20,9 @@ import (
 // @description     Сервис аутентификации для приложения Cook Book
 // @host            localhost:8000
 // @BasePath        /api/v1
+// @securityDefinitions.apikey ApiKeyAuth
+// @in cookie
+// @name access_token
 func main() {
 	cfg := config.Load()
 
@@ -24,17 +31,31 @@ func main() {
 		log.Fatalf("Ошибка подключения к базе данных: %v", err)
 	}
 
-	sqlDB, err := db.DB()
-	if err != nil {
-		log.Fatalf("Ошибка получения объекта БД: %v", err)
-	}
-	if err := sqlDB.Ping(); err != nil {
-		log.Fatalf("Ошибка пинга БД: %v", err)
-	}
-
 	log.Println("Сервис аутентификации запускается...")
 
+	userRepo := repository.NewUserRepository(db)
+	userService := service.NewUserService(userRepo, cfg.JWTSecret)
+	authHandler := handler.NewAuthHandler(userService)
+	authMiddleware := middleware.NewAuthMiddleware(userService)
+
 	r := gin.Default()
+
+	api := r.Group("/api/v1")
+	{
+		auth := api.Group("/auth")
+		{
+			auth.POST("/register", authHandler.Register)
+			auth.POST("/login", authHandler.Login)
+			auth.POST("/logout", authHandler.Logout)
+
+			protected := auth.Group("/")
+			protected.Use(authMiddleware.RequireAuth())
+			{
+				protected.GET("/profile", authHandler.GetProfile)
+				protected.POST("/change-password", authHandler.ChangePassword)
+			}
+		}
+	}
 
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
