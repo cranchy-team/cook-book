@@ -33,6 +33,21 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+  auth-service:
+    build: ./auth
+    container_name: cook_book_auth_service
+    ports:
+      - "${AUTH_SERVICE_PORT}:8000"
+    environment:
+      DATABASE_URL: ${DATABASE_URL}
+      JWT_SECRET: ${JWT_SECRET}
+      AUTH_SERVICE_PORT: 8000
+    depends_on:
+      postgres:
+        condition: service_healthy
+      migrate-auth:
+        condition: service_completed_successfully
+
   # migrate-recipe:
   #   image: python:3.12-slim
   #   container_name: cook_book_migrate_recipe
@@ -44,6 +59,24 @@ services:
   #     postgres:
   #       condition: service_healthy
   #     migrate-auth:
+  #       condition: service_completed_successfully
+
+  # recipe-service:
+  #   build: ./recipe
+  #   container_name: cook_book_recipe_service
+  #   ports:
+  #     - "${RECIPE_SERVICE_PORT}:8080"
+  #   environment:
+  #     DATABASE_URL: ${DATABASE_URL}
+  #     JWT_SECRET: ${JWT_SECRET}
+  #     RECIPE_SERVICE_PORT: 8080
+  #     UPLOAD_DIR: /app/static/uploads
+  #   volumes:
+  #     - uploads_volume:/app/static/uploads
+  #   depends_on:
+  #     postgres:
+  #       condition: service_healthy
+  #     migrate-recipe:
   #       condition: service_completed_successfully
 
 volumes:
