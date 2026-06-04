@@ -44,7 +44,6 @@ auth/auth-service
 
 
 # frontend
-frontend/
 node_modules
 dist/
 
