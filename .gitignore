@@ -1,8 +1,8 @@
 # GENERAL
 
 # ide
-.vscode
-.idea
+.vscode/
+.idea/
 
 # env
 .env
@@ -15,13 +15,10 @@ volumes/
 # logs
 *.log
 
-# project docs/specs
+# proj docs/specs
 *.docx
-README.md
 PROJECT_STATUS.md
 API_EXAMPLES.md
-
-
 
 
 # GO
@@ -43,13 +40,13 @@ auth/docs/
 auth/auth-service
 
 
-# frontend
+# FRONTEND
 node_modules
 dist/
+
 
 # PYTHON
 __pycache__/
 
-
-# Virtual environments
+# virtual environment
 .venv
