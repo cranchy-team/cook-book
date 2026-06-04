@@ -6,8 +6,7 @@ from .database import engine, Base
 from .models.recipe import Recipe
 from .models.favorite import Favorite
 
-from .api.recipes import recipes_router
-from .api.favorites import favorites_router
+from .api import recipes_router, favorites_router
 
 settings = get_settings()
 

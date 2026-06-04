@@ -1,7 +1,7 @@
 from jose import JWTError, jwt
 from fastapi import Depends, HTTPException, status, Cookie
 from datetime import datetime
-from .config import get_settings
+from ..config import get_settings
 
 settings = get_settings()
 
