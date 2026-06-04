@@ -9,7 +9,7 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}" ]
       interval: 5s
@@ -51,10 +51,14 @@ services:
   migrate-recipe:
     image: python:3.12-slim
     container_name: migrate_recipe
+    environment:
+      DATABASE_URL: ${DATABASE_URL}
+      JWT_SECRET: ${JWT_SECRET}
+      RECIPE_SERVICE_PORT: ${RECIPE_SERVICE_PORT}
     volumes:
       - ./recipe:/app
-    working_dir: /app
-    command: ["sh", "-c", "pip install -r requirements.txt && alembic upgrade head"]
+    working_dir: /app/migrations
+    command: ["sh", "-c", "cd /app && pip install -r requirements.txt && cd /app/migrations && alembic upgrade head"]
     depends_on:
       postgres:
         condition: service_healthy
