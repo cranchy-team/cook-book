@@ -11,6 +11,7 @@ type Config struct {
 	DatabaseURL string
 	JWTSecret   string
 	Port        string
+	Environment string
 }
 
 func Load() *Config {
@@ -20,6 +21,7 @@ func Load() *Config {
 		DatabaseURL: getEnv("DATABASE_URL", "postgres://postgres:postgres@localhost:5432/cook_book?sslmode=disable"),
 		JWTSecret:   getEnv("JWT_SECRET", ""),
 		Port:        getEnv("AUTH_SERVICE_PORT", "8000"),
+		Environment: getEnv("ENVIRONMENT", "development"),
 	}
 }
 

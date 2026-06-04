@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/cook-book/auth/internal/config"
 	"github.com/cook-book/auth/internal/service"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
@@ -11,11 +12,13 @@ import (
 
 type AuthHandler struct {
 	userService service.UserService
+	cfg         *config.Config
 }
 
-func NewAuthHandler(userService service.UserService) *AuthHandler {
+func NewAuthHandler(userService service.UserService, cfg *config.Config) *AuthHandler {
 	return &AuthHandler{
 		userService: userService,
+		cfg:         cfg,
 	}
 }
 
@@ -109,13 +112,15 @@ func (h *AuthHandler) Login(c *gin.Context) {
 		return
 	}
 
+	isSecure := h.cfg.Environment == "production"
+
 	http.SetCookie(c.Writer, &http.Cookie{
 		Name:     "access_token",
 		Value:    accessToken,
 		Path:     "/",
 		HttpOnly: true,
-		Secure:   true,
-		SameSite: http.SameSiteStrictMode,
+		Secure:   isSecure,
+		SameSite: http.SameSiteLaxMode, // Lax для локальной разработки
 		MaxAge:   30 * 60,
 	})
 
@@ -124,8 +129,8 @@ func (h *AuthHandler) Login(c *gin.Context) {
 		Value:    refreshToken,
 		Path:     "/",
 		HttpOnly: true,
-		Secure:   true,
-		SameSite: http.SameSiteStrictMode,
+		Secure:   isSecure,
+		SameSite: http.SameSiteLaxMode,
 		MaxAge:   7 * 24 * 60 * 60,
 	})
 
@@ -144,13 +149,15 @@ func (h *AuthHandler) Login(c *gin.Context) {
 // @Success 200 {object} map[string]string
 // @Router /logout [post]
 func (h *AuthHandler) Logout(c *gin.Context) {
+	isSecure := h.cfg.Environment == "production"
+
 	http.SetCookie(c.Writer, &http.Cookie{
 		Name:     "access_token",
 		Value:    "",
 		Path:     "/",
 		HttpOnly: true,
-		Secure:   true,
-		SameSite: http.SameSiteStrictMode,
+		Secure:   isSecure,
+		SameSite: http.SameSiteLaxMode,
 		MaxAge:   -1,
 	})
 
@@ -159,8 +166,8 @@ func (h *AuthHandler) Logout(c *gin.Context) {
 		Value:    "",
 		Path:     "/",
 		HttpOnly: true,
-		Secure:   true,
-		SameSite: http.SameSiteStrictMode,
+		Secure:   isSecure,
+		SameSite: http.SameSiteLaxMode,
 		MaxAge:   -1,
 	})
 

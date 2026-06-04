@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import { useAuthStore } from '@/stores/auth'
 
 const routes = [
   {
@@ -48,13 +49,22 @@ const router = createRouter({
   routes
 })
 
-router.beforeEach((to, from, next) => {
-  const token = localStorage.getItem('token')
+router.beforeEach(async (to, from, next) => {
+  const authStore = useAuthStore()
   const requiresAuth = to.meta.requiresAuth
 
-  if (requiresAuth && !token) {
+  // Проверяем авторизацию, если пользователь не загружен
+  if (!authStore.user && requiresAuth) {
+    try {
+      await authStore.fetchUser()
+    } catch (error) {
+      // Пользователь не авторизован
+    }
+  }
+
+  if (requiresAuth && !authStore.isLoggedIn) {
     next({ name: 'login' })
-  } else if ((to.name === 'login' || to.name === 'register') && token) {
+  } else if ((to.name === 'login' || to.name === 'register') && authStore.isLoggedIn) {
     next({ name: 'recipes' })
   } else {
     next()
