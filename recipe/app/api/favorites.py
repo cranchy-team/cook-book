@@ -8,6 +8,8 @@ from ..database import get_db
 from ..auth.jwt import get_current_user
 from ..services.favorite_service import FavoriteService
 from ..models.recipe import Recipe
+from ..models.favorite import Favorite
+from ..schemas.recipe import RecipeResponse
 from ..schemas.favorite import FavoriteResponse
 
 logger = logging.getLogger(__name__)
@@ -54,7 +56,7 @@ async def remove_from_favorites(
     return None
 
 
-@router.get("/", response_model=List[Recipe])
+@router.get("/", response_model=List[RecipeResponse])
 async def get_favorites(
     limit: int = 50,
     db: Session = Depends(get_db),

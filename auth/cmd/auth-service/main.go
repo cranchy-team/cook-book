@@ -52,6 +52,10 @@ func main() {
 		MaxAge:           12 * time.Hour,
 	}))
 
+	r.GET("/health", func(c *gin.Context) {
+		c.JSON(200, gin.H{"status": "healthy", "service": "auth-service"})
+	})
+
 	api := r.Group("/api/v1")
 	{
 		auth := api.Group("/auth")
