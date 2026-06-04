@@ -57,7 +57,6 @@ jobs:
   # линтинг fastapi-сервиса recipe
   python-lint:
     runs-on: ubuntu-latest
-    if: ${{ hashFiles('recipe/requirements.txt, recipe/pyproject.toml') != '' }}
     defaults:
       run:
         working-directory: ./recipe
