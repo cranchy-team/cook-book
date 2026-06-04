@@ -1,60 +1,66 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
-import { authApi, recipeApi } from '@/api/client'
+import { authApi } from '@/api/client'
 
 export const useAuthStore = defineStore('auth', () => {
   const user = ref(null)
-  const token = ref(localStorage.getItem('token') || null)
+  const isLoading = ref(false)
 
-  const isLoggedIn = computed(() => !!token.value)
+  const isLoggedIn = computed(() => !!user.value)
 
   const login = async (email, password) => {
     try {
-      const response = await authApi.post('/login', { email, password })
-      token.value = response.data.access_token
-      user.value = response.data.user
-      localStorage.setItem('token', token.value)
+      isLoading.value = true
+      const response = await authApi.post('/auth/login', { email, password })
+      user.value = response.data
       return response.data
     } catch (error) {
       throw error
+    } finally {
+      isLoading.value = false
     }
   }
 
   const register = async (email, password) => {
     try {
-      const response = await authApi.post('/register', { email, password })
+      isLoading.value = true
+      const response = await authApi.post('/auth/register', { email, password })
       return response.data
     } catch (error) {
       throw error
+    } finally {
+      isLoading.value = false
     }
   }
 
   const logout = async () => {
     try {
-      await authApi.post('/logout')
+      await authApi.post('/auth/logout')
     } catch (error) {
       console.error('Logout error:', error)
     } finally {
-      token.value = null
       user.value = null
-      localStorage.removeItem('token')
     }
   }
 
   const fetchUser = async () => {
     try {
-      const response = await authApi.get('/me')
+      isLoading.value = true
+      const response = await authApi.get('/auth/profile')
       user.value = response.data
       return user.value
     } catch (error) {
       console.error('Fetch user error:', error)
+      user.value = null
       return null
+    } finally {
+      isLoading.value = false
     }
   }
 
   return {
     user,
-    token,
+    isLoading,
     isLoggedIn,
     login,
     register,

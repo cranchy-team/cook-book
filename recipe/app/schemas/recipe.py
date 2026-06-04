@@ -6,7 +6,7 @@ from uuid import UUID
 
 class RecipeBase(BaseModel):
     """Базовая схема рецепта."""
-    
+
     title: str = Field(..., min_length=1, max_length=200, description="Название рецепта")
     ingredients: str = Field(..., description="Список ингредиентов")
     steps: str = Field(..., description="Шаги приготовления")
@@ -21,7 +21,7 @@ class RecipeCreate(RecipeBase):
 
 class RecipeUpdate(BaseModel):
     """Схема для обновления рецепта."""
-    
+
     title: Optional[str] = Field(None, min_length=1, max_length=200)
     ingredients: Optional[str] = None
     steps: Optional[str] = None
@@ -31,12 +31,12 @@ class RecipeUpdate(BaseModel):
 
 class RecipeResponse(RecipeBase):
     """Схема ответа рецепта."""
-    
+
     id: UUID
     user_id: UUID
     image_path: Optional[str] = None
     created_at: datetime
     updated_at: datetime
-    
+
     class Config:
         from_attributes = True

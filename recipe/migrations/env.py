@@ -8,15 +8,13 @@ import os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from app.database import Base
-from app.models.recipe import Recipe
-from app.models.favorite import Favorite
 from app.config import get_settings
 
 settings = get_settings()
 
 config = context.config
 
-config.set_main_option("sqlalchemy.url", settings.DATABASE_URL)
+config.set_main_option("sqlalchemy.url", settings.sqlalchemy_database_url)
 
 target_metadata = Base.metadata
 
@@ -45,7 +43,7 @@ def run_migrations_online() -> None:
 
     with connectable.connect() as connection:
         context.configure(
-            connection=connection, 
+            connection=connection,
             target_metadata=target_metadata
         )
 

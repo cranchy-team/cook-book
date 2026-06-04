@@ -4,7 +4,7 @@ from .favorite import FavoriteCreate, FavoriteResponse
 __all__ = [
     "RecipeBase",
     "RecipeCreate",
-    "RecipeUpdate", 
+    "RecipeUpdate",
     "RecipeResponse",
     "FavoriteCreate",
     "FavoriteResponse"

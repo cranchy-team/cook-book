@@ -1,6 +1,6 @@
 services:
   postgres:
-    image: postgres:16-alpine
+    image: postgres:18.4-alpine
     container_name: postgres
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
@@ -9,7 +9,7 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}" ]
       interval: 5s
@@ -18,7 +18,7 @@ services:
 
   adminer:
     image: adminer:latest
-    container_name: cook_book_adminer
+    container_name: adminer
     ports:
       - "${ADMINER_PORT}:8080"
     depends_on:
@@ -26,7 +26,7 @@ services:
 
   migrate-auth:
     image: migrate/migrate:latest
-    container_name: cook_book_migrate_auth
+    container_name: migrate_auth
     volumes:
       - ./auth/migrations:/migrations
     command: [ "-path", "/migrations", "-database", "${DATABASE_URL}", "up" ]
@@ -50,11 +50,15 @@ services:
 
   migrate-recipe:
     image: python:3.12-slim
-    container_name: cook_book_migrate_recipe
+    container_name: migrate_recipe
+    environment:
+      DATABASE_URL: ${DATABASE_URL}
+      JWT_SECRET: ${JWT_SECRET}
+      RECIPE_SERVICE_PORT: ${RECIPE_SERVICE_PORT}
     volumes:
       - ./recipe:/app
-    working_dir: /app
-    command: ["sh", "-c", "pip install -r requirements.txt && alembic upgrade head"]
+    working_dir: /app/migrations
+    command: ["sh", "-c", "cd /app && pip install -r requirements.txt && cd /app/migrations && alembic upgrade head"]
     depends_on:
       postgres:
         condition: service_healthy
@@ -63,7 +67,7 @@ services:
 
   recipe-service:
     build: ./recipe
-    container_name: cook_book_recipe_service
+    container_name: recipe_service
     ports:
       - "${RECIPE_SERVICE_PORT}:8080"
     environment:
@@ -81,7 +85,7 @@ services:
 
   frontend:
     build: ./frontend
-    container_name: cook_book_frontend
+    container_name: frontend
     ports:
       - "80:80"
     depends_on:

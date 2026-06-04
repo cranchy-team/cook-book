@@ -2,12 +2,15 @@ package main
 
 import (
 	"log"
+	"time"
 
+	_ "github.com/cook-book/auth/docs"
 	"github.com/cook-book/auth/internal/config"
 	"github.com/cook-book/auth/internal/handler"
 	"github.com/cook-book/auth/internal/middleware"
 	"github.com/cook-book/auth/internal/repository"
 	"github.com/cook-book/auth/internal/service"
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
@@ -35,10 +38,23 @@ func main() {
 
 	userRepo := repository.NewUserRepository(db)
 	userService := service.NewUserService(userRepo, cfg.JWTSecret)
-	authHandler := handler.NewAuthHandler(userService)
+	authHandler := handler.NewAuthHandler(userService, cfg)
 	authMiddleware := middleware.NewAuthMiddleware(userService)
 
 	r := gin.Default()
+
+	r.Use(cors.New(cors.Config{
+		AllowOrigins:     []string{"http://localhost", "http://localhost:80", "http://localhost:3000", "http://localhost:5173"},
+		AllowMethods:     []string{"GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"},
+		AllowHeaders:     []string{"Origin", "Content-Type", "Authorization", "Accept"},
+		ExposeHeaders:    []string{"Content-Length"},
+		AllowCredentials: true,
+		MaxAge:           12 * time.Hour,
+	}))
+
+	r.GET("/health", func(c *gin.Context) {
+		c.JSON(200, gin.H{"status": "healthy", "service": "auth-service"})
+	})
 
 	api := r.Group("/api/v1")
 	{

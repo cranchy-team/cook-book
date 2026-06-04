@@ -7,7 +7,8 @@ import logging
 from ..database import get_db
 from ..auth.jwt import get_current_user
 from ..services.favorite_service import FavoriteService
-from ..models.recipe import Recipe
+from ..models.favorite import Favorite
+from ..schemas.recipe import RecipeResponse
 from ..schemas.favorite import FavoriteResponse
 
 logger = logging.getLogger(__name__)
@@ -23,7 +24,7 @@ async def add_to_favorites(
 ):
     """
     Добавление рецепта в избранное.
-    
+
     Идемпотентная операция - если рецепт уже в избранном, вернет существующую запись.
     """
     try:
@@ -54,7 +55,7 @@ async def remove_from_favorites(
     return None
 
 
-@router.get("/", response_model=List[Recipe])
+@router.get("/", response_model=List[RecipeResponse])
 async def get_favorites(
     limit: int = 50,
     db: Session = Depends(get_db),
@@ -81,10 +82,10 @@ async def check_favorite_status(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Рецепт не найден в избранном"
         )
-    
+
     favorite = db.query(Favorite).filter(
         Favorite.user_id == user["user_id"],
         Favorite.recipe_id == recipe_id
     ).first()
-    
+
     return favorite
