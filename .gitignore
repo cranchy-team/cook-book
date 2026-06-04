@@ -17,6 +17,11 @@ volumes/
 
 # project docs/specs
 *.docx
+README.md
+PROJECT_STATUS.md
+API_EXAMPLES.md
+
+
 
 
 # GO
@@ -36,3 +41,16 @@ auth/docs/
 
 # build artifacts
 auth/auth-service
+
+
+# frontend
+frontend/
+node_modules
+dist/
+
+# PYTHON
+__pycache__/
+
+
+# Virtual environments
+.venv
