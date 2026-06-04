@@ -2,10 +2,6 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from .config import get_settings
 from .database import engine, Base
-
-from .models.recipe import Recipe
-from .models.favorite import Favorite
-
 from .api import recipes_router, favorites_router
 
 settings = get_settings()

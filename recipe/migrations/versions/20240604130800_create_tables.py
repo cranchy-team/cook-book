@@ -1,5 +1,4 @@
 from typing import Sequence, Union
-
 from alembic import op
 import sqlalchemy as sa
 from sqlalchemy.dialects import postgresql
@@ -27,10 +26,10 @@ def upgrade() -> None:
         sa.PrimaryKeyConstraint('id'),
         sa.ForeignKeyConstraint(['user_id'], ['users.id'], ondelete='CASCADE')
     )
-    
+
     op.create_index('ix_recipes_user_id', 'recipes', ['user_id'])
     op.create_index('ix_recipes_created_at', 'recipes', ['created_at', 'id'], unique=False)
-    
+
     op.create_table(
         'favorites',
         sa.Column('user_id', postgresql.UUID(as_uuid=True), nullable=False),

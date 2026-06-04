@@ -8,8 +8,6 @@ import os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from app.database import Base
-from app.models.recipe import Recipe
-from app.models.favorite import Favorite
 from app.config import get_settings
 
 settings = get_settings()
@@ -45,7 +43,7 @@ def run_migrations_online() -> None:
 
     with connectable.connect() as connection:
         context.configure(
-            connection=connection, 
+            connection=connection,
             target_metadata=target_metadata
         )
 

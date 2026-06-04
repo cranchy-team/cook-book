@@ -47,13 +47,13 @@ async def get_recipes(
         created_before=created_before,
         limit=limit,
         cursor=cursor
-    )
-    
+)
+
     from fastapi import Response
     response = Response()
     if next_cursor:
         response.headers["X-Next-Cursor"] = next_cursor
-    
+
     return recipes
 
 
@@ -116,13 +116,13 @@ async def upload_recipe_image(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Рецепт не найден"
         )
-    
+
     if recipe.image_path:
         delete_image(recipe.image_path)
-    
+
     image_path = save_image(image, str(recipe_id))
     recipe.image_path = image_path
     db.commit()
     db.refresh(recipe)
-    
+
     return recipe
