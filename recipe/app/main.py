@@ -5,10 +5,9 @@ import os
 from .config import get_settings
 from .database import engine, Base
 from .api import recipes_router, favorites_router
+from . import models
 
 settings = get_settings()
-
-from . import models
 
 Base.metadata.create_all(bind=engine)
 
