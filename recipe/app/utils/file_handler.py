@@ -72,7 +72,7 @@ def save_image(file: UploadFile, recipe_id: str) -> str:
             buffer.write(content)
         logger.info(f"Изображение сохранено: {filepath}")
 
-        return f"uploads/{filename}"
+        return f"/{filename}"
     except Exception as e:
         logger.error(f"Ошибка сохранения файла: {e}")
         raise IOError(f"Не удалось сохранить файл: {e}")
@@ -91,7 +91,7 @@ def delete_image(image_path: str) -> bool:
     if not image_path:
         return False
 
-    full_path = os.path.join(settings.UPLOAD_DIR, image_path.replace("uploads/", ""))
+    full_path = os.path.join(settings.UPLOAD_DIR, image_path.lstrip("/"))
     try:
         if os.path.exists(full_path):
             os.remove(full_path)
