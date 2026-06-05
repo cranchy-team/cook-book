@@ -5,14 +5,9 @@ from .config import get_settings
 
 settings = get_settings()
 
-if "sqlite" in settings.DATABASE_URL:
-    connect_args = {"check_same_thread": False}
-else:
-    connect_args = {"connect_timeout": 10}
-
 engine = create_engine(
     settings.sqlalchemy_database_url,
-    connect_args=connect_args
+    connect_args={"connect_timeout": 10}
 )
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
