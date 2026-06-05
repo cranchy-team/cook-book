@@ -5,7 +5,7 @@ import os
 from .config import get_settings
 from .database import engine, Base
 from .api import recipes_router, favorites_router
-from . import models
+from .models import Recipe, Favorite, User  # noqa: F401 pylint: disable=unused-import
 
 settings = get_settings()
 
