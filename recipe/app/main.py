@@ -1,5 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
+import os
 from .config import get_settings
 from .database import engine, Base
 from .api import recipes_router, favorites_router
@@ -15,6 +17,12 @@ app = FastAPI(
     docs_url="/docs",
     redoc_url="/redoc",
 )
+
+# Создаем директорию для загрузок, если она не существует
+os.makedirs(settings.UPLOAD_DIR, exist_ok=True)
+
+# Монтируем статические файлы для доступа к изображениям
+app.mount("/uploads", StaticFiles(directory=settings.UPLOAD_DIR), name="uploads")
 
 # CORS middleware
 app.add_middleware(
