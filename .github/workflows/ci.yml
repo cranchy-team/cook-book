@@ -77,6 +77,20 @@ jobs:
   python-test:
     runs-on: ubuntu-latest
     needs: python-lint
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: test_user
+          POSTGRES_PASSWORD: test_pass
+          POSTGRES_DB: test_db
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
     defaults:
       run:
         working-directory: ./recipe
@@ -91,9 +105,20 @@ jobs:
             recipe/pyproject.toml
       - name: Install dependencies
         run: pip install -r requirements.txt
+      - name: Create users table
+        run: |
+          PGPASSWORD=test_pass psql -h localhost -U test_user -d test_db -c "
+          CREATE TABLE IF NOT EXISTS users (
+            id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+            username VARCHAR(100) NOT NULL
+          );"
       - name: Run Pytest
+        env:
+          DATABASE_URL: postgres://test_user:test_pass@localhost:5432/test_db
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          UPLOAD_DIR: /tmp/uploads
         run: pytest -v app/
-
+        
   # проверка сборки docker-образов
   docker-build:
     runs-on: ubuntu-latest
