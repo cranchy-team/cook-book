@@ -8,6 +8,8 @@ from .api import recipes_router, favorites_router
 
 settings = get_settings()
 
+from . import models
+
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI(
