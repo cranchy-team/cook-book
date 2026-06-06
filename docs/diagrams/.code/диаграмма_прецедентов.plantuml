@@ -1,0 +1,87 @@
+@startuml диаграмма_прецедентов
+
+skinparam actorStyle hollow
+skinparam shadowing false
+skinparam roundcorner 15
+skinparam backgroundcolor #F4F6F9
+skinparam defaultTextAlignment center
+skinparam ArrowColor #2B2D42
+skinparam ArrowThickness 2
+skinparam DefaultFontColor #1D1E2C
+
+skinparam actor {
+  BackgroundColor #FF477E
+  BorderColor #FF477E
+  FontColor #1D1E2C
+}
+
+skinparam package {
+  BorderColor #2B2D42
+  FontColor #1D1E2C
+  FontStyle bold
+}
+skinparam usecase {
+  BorderColor #2B2D42
+  FontColor #1D1E2C
+  FontStyle bold
+}
+
+actor "**Юзер**" as User #FF477E
+
+package "Аутентификация" as UC_AUTH #FFE4B5 {
+  usecase "Регистрация" as UC_Register #FFD699
+  usecase "Вход в систему" as UC_Login #FFD699
+  usecase "Выход из системы" as UC_Logout #FFD699
+  UC_Register -[hidden]down-> UC_Login
+  UC_Login -[hidden]down-> UC_Logout
+}
+
+package "Профиль и настройки" as UC_PROFILE #B0E0E6 {
+  usecase "Смена пароля" as UC_ChangePwd #8ECDD2
+  usecase "Просмотр профиля" as UC_Profile #8ECDD2
+  usecase "Смена языка (ru/en)" as UC_Lang #8ECDD2
+  UC_ChangePwd -[hidden]down-> UC_Profile
+  UC_Profile -[hidden]down-> UC_Lang
+}
+
+package "Управление рецептами" as UC_RECIPE #C1FFC1 {
+  usecase "Создание рецепта" as UC_Create #99E699
+  usecase "Редактирование рецепта" as UC_Edit #99E699
+  usecase "Удаление рецепта" as UC_Delete #99E699
+  usecase "Загрузка фото с кропом 1:1" as UC_Image #99E699
+  UC_Create -[hidden]down-> UC_Edit
+  UC_Edit -[hidden]down-> UC_Delete
+  UC_Delete -[hidden]down-> UC_Image
+  UC_Create ..> UC_Image : <<include>>
+  UC_Edit ..> UC_Image : <<include>>
+}
+
+package "Просмотр и навигация" as UC_VIEW_NAV #FFDAB9 {
+  usecase "Лента рецептов (пагинация)" as UC_Feed #FFC09E
+  usecase "Бесконечная прокрутка" as UC_Scroll #FFC09E
+  usecase "Детальный просмотр рецепта" as UC_Detail #FFC09E
+  UC_Feed -[hidden]down-> UC_Scroll
+  UC_Scroll -[hidden]down-> UC_Detail
+  UC_Feed ..> UC_Scroll : <<extend>>
+}
+
+package "Поиск и фильтры" as UC_SEARCH_FILTER #E6E6FA {
+  usecase "Поиск по названию/ингредиентам" as UC_Search #C4C4E6
+  usecase "Фильтр по дате" as UC_DateFilter #C4C4E6
+  UC_Search -[hidden]down-> UC_DateFilter
+}
+
+package "Избранное" as US_FAVORITE #FFB6C1 {
+  usecase "Просмотр избранного" as UC_ViewFav #FF9AAE
+  usecase "Добавить/удалить из избранного" as UC_FavToggle #FF9AAE
+  UC_ViewFav -[hidden]down-> UC_FavToggle
+}
+
+User --> UC_RECIPE
+User --> UC_AUTH
+User --> UC_PROFILE
+User --> UC_VIEW_NAV
+User --> UC_SEARCH_FILTER
+User --> US_FAVORITE
+
+@enduml

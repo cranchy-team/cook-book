@@ -1,29 +1,27 @@
 <div align="center">
    <img src="docs/public/logo.png" alt="logo.png" width="200" height="200" />
    <h1>Cook Book 🍳</h1>
-   <p><b><i>Веб-приложение для управления коллекцией рецептов ଘ(੭ˊᵕˋ)੭* ੈ✩‧₊˚</i></b></p>
-   <p align="center">
-      <a href="https://www.python.org/"><img src="https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Python"></a>
-      <a href="https://fastapi.tiangolo.com/"><img src="https://img.shields.io/badge/FastAPI-009688?style=for-the-badge&logo=fastapi&logoColor=white" alt="FastAPI"></a>
-      <a href="https://go.dev/"><img src="https://img.shields.io/badge/Go-00ADD8?style=for-the-badge&logo=go&logoColor=white" alt="Go"></a>
-      <a href="https://gin-gonic.com/"><img src="https://img.shields.io/badge/Gin-00ADD8?style=for-the-badge&logo=go&logoColor=white" alt="Gin"></a>
-      <a href="https://vuejs.org/"><img src="https://img.shields.io/badge/Vue.js-4FC08D?style=for-the-badge&logo=vuedotjs&logoColor=white" alt="Vue.js"></a>
-      <a href="https://www.postgresql.org/"><img src="https://img.shields.io/badge/PostgreSQL-4169E1?style=for-the-badge&logo=postgresql&logoColor=white" alt="PostgreSQL"></a>
-      <a href="https://www.docker.com/"><img src="https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white" alt="Docker"></a>
-      <a href="https://nginx.org/"><img src="https://img.shields.io/badge/Nginx-009639?style=for-the-badge&logo=nginx&logoColor=white" alt="Nginx"></a>
-      <a href="https://swagger.io/"><img alt="Swagger" src="https://img.shields.io/badge/Swagger-85EA2D?style=for-the-badge&logo=swagger&logoColor=black" alt="Swagger"></a>
-      <a href="https://git-scm.com/"><img src="https://img.shields.io/badge/Git-F05032?style=for-the-badge&logo=git&logoColor=white" alt="Git"></a>
-      <a href="https://github.com/"><img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white" alt="GitHub"></a>
-      <a href="https://plantuml.com/"><img src="https://img.shields.io/badge/plantuml-e75480?style=for-the-badge&logo=uml" alt="PlantUML"></a>
-      <a href="LICENSE.md"><img src="https://img.shields.io/badge/MIT-yellow?style=for-the-badge&logo=readme&logoColor=white" alt="MIT"></a>
-   </p>
+   <p><b><i>Веб-приложение для ведения личной книги рецептов ଘ(੭ˊᵕˋ)੭* ੈ✩‧₊˚</i></b></p>
+      <a href="https://www.python.org/"><img src="https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Python" height="35"></a>
+      <a href="https://fastapi.tiangolo.com/"><img src="https://img.shields.io/badge/FastAPI-009688?style=for-the-badge&logo=fastapi&logoColor=white" alt="FastAPI" height="35"></a>
+      <a href="https://go.dev/"><img src="https://img.shields.io/badge/Go-00ADD8?style=for-the-badge&logo=go&logoColor=white" alt="Go" height="35"></a>
+      <a href="https://gin-gonic.com/"><img src="https://img.shields.io/badge/Gin-00ADD8?style=for-the-badge&logo=go&logoColor=white" alt="Gin" height="35"></a>
+      <a href="https://vuejs.org/"><img src="https://img.shields.io/badge/Vue.js-4FC08D?style=for-the-badge&logo=vuedotjs&logoColor=white" alt="Vue.js" height="35"></a>
+      <a href="https://www.postgresql.org/"><img src="https://img.shields.io/badge/PostgreSQL-4169E1?style=for-the-badge&logo=postgresql&logoColor=white" alt="PostgreSQL" height="35"></a>
+      <br />
+      <a href="https://www.docker.com/"><img src="https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white" alt="Docker" height="35"></a>
+      <a href="https://nginx.org/"><img src="https://img.shields.io/badge/Nginx-009639?style=for-the-badge&logo=nginx&logoColor=white" alt="Nginx" height="35"></a>
+      <a href="https://swagger.io/"><img src="https://img.shields.io/badge/Swagger-85EA2D?style=for-the-badge&logo=swagger&logoColor=black" alt="Swagger" height="35"></a>
+      <a href="https://git-scm.com/"><img src="https://img.shields.io/badge/Git-F05032?style=for-the-badge&logo=git&logoColor=white" alt="Git" height="35"></a>
+      <a href="https://plantuml.com/"><img src="https://img.shields.io/badge/plantuml-e75480?style=for-the-badge&logo=uml" alt="PlantUML" height="35"></a>
+      <a href="LICENSE.md"><img src="https://img.shields.io/badge/MIT-yellow?style=for-the-badge&logo=readme&logoColor=white" alt="MIT" height="35"></a>
 </div>
 
 ---
 
 ## Общее описание
 
-**Cook Book** - это веб-приложение для управления личной коллекцией рецептов с аутентификацией, загрузкой фото и избранным. Здесь юзеры могут:
+**Cook Book** - это веб-приложение для ведения личной книги рецептов с аутентификацией, загрузкой фото и избранным. Здесь юзеры могут:
 
 - зарегистрироваться и войти в аккаунт (JWT в httpOnly cookies);
 - добавлять, редактировать и удалять свои рецепты;
@@ -35,14 +33,14 @@
 
 Приложение спроектировано в рамках MSA с общей базой данных PostgreSQL.
 
-<div align="center">
-   <details open>
-      <summary><h3>Диаграмма прецедентов</h3></summary>
-      <img src="docs/diagrams/диаграмма_прецедентов.png" alt="Диаграмма прецедентов" />
-      <br>
-      <sub><i>Рис 1. Диаграмма прецедентов (возможности акторов системы)</sub></i>
-   </details>
-</div>
+### Диаграмма прецидентов
+
+<details open>
+   <summary><b>Нажмите, чтобы скрыть/показать диаграмму</b></summary>
+   <img src="docs/diagrams/диаграмма_прецедентов.png" alt="Диаграмма прецедентов" />
+   <br>
+   <sub><i>Рис 1. Диаграмма прецедентов: возможности юзера в системе</sub></i>
+</details>
 
 ---
 
@@ -79,14 +77,14 @@
 4. **PostgreSQL** - общая БД для обоих сервисов;
 5. **Adminer** - веб-интерфейс для работы с БД.
 
-<div align="center">
-   <details open>
-      <summary><h3>Диаграмма компонентов</h3></summary>
-      <img src="docs/diagrams/диаграмма_компонентов.png" alt="Диаграмма компонентов" />
-      <br>
-      <sub><i>Рис 2. Диаграмма компонентов (архитектура ПО: компоненты системы и их взаимосвязи)</sub></i>
-   </details>
-</div>
+### Диаграмма компонентов
+
+<details open>
+   <summary><b>Нажмите, чтобы скрыть/показать диаграмму</b></summary>
+   <img src="docs/diagrams/диаграмма_компонентов.png" alt="Диаграмма компонентов" />
+   <br>
+   <sub><i>Рис 2. Диаграмма компонентов: компоненты системы и их взаимосвязи</sub></i>
+</details>
 
 ---
 
@@ -99,56 +97,51 @@
 
 ### Шаги запуска
 
-1. Склонируйте репозиторий или скачайте проект:
+1. Склонируйте репо или скачайте проект:
 
-```bash
-cd cook-book
-```
+   ```bash
+   git clone https://github.com/cranchy-team/cook-book.git
+   cd cook-book
+   ```
 
-2. Убедитесь, что файл `.env` заполнен по образцу `.env.example`:
+2. Создайте в корне проекта файл `.env` и заполните его **вашими** данными по образцу [.env.example](.env.example "образец .env"):
 
-```bash
-POSTGRES_USER=dev
-POSTGRES_PASSWORD=dev123
-POSTGRES_DB=cookbook
-DATABASE_URL=postgres://dev:dev123@postgres:5432/cookbook?sslmode=disable
-JWT_SECRET=i-am-so-super-pupper-drupper-im-the-front-girl-in-round-secret-key-here
-AUTH_SERVICE_PORT=8000
-RECIPE_SERVICE_PORT=8080
-ADMINER_PORT=8081
-ENVIRONMENT=development
-```
+   ```bash
+   POSTGRES_USER=dev
+   POSTGRES_PASSWORD=dev123
+   POSTGRES_DB=cookbook
+   DATABASE_URL=postgres://dev:dev123@postgres:5432/cookbook?sslmode=disable
+   JWT_SECRET=i-am-so-super-pupper-drupper-im-the-front-girl-in-round-secret-key-here
+   AUTH_SERVICE_PORT=8000
+   RECIPE_SERVICE_PORT=8080
+   ADMINER_PORT=8081
+   ENVIRONMENT=development
+   ```
 
-3. Запустите проект с помощью Docker Compose:
+3. Запустите проект с помощью docker-compose:
 
-```bash
-docker-compose up --build
-```
-
-Или, если нужно пересобрать образы без кэша:
-
-```bash
-docker-compose up --build --no-cache
-```
+   ```bash
+   docker-compose up --build
+   ```
 
 4. После успешного запуска откройте в браузере:
 
-- **Фронт**: <http://localhost>;
-- **Swagger auth-сервиса**: <http://localhost/swagger/index.html>;
-- **Swagger recipe-сервиса**: <http://localhost/docs>;
-- **Adminer**: <http://localhost:8081>.
+- Фронт: <http://localhost>
+- Swagger сервиса `auth`: <http://localhost/swagger/index.html>
+- Swagger сервиса `recipe`: <http://localhost/docs>
+- Adminer: <http://localhost:8081>
 
-1. Чтобы остановить проект:
+5. Чтобы остановить проект:
 
-```bash
-docker-compose down
-```
+   ```bash
+   docker-compose down
+   ```
 
-Если нужно также удалить volumes:
+6. Если нужно также удалить `volumes`:
 
-```bash
-docker-compose down -v
-```
+   ```bash
+   docker-compose down -v
+   ```
 
 ---
 
@@ -180,8 +173,8 @@ cook-book/
 
 ### Миграции
 
-- **Auth Service**: Использует `golang-migrate`, миграции в `auth/migrations/`;
-- **Recipe Service**: Использует `Alembic`, миграции в `recipe/migrations/`.
+- **Auth Service**: Использует `golang-migrate`, миграции в `auth/migrations/`
+- **Recipe Service**: Использует `Alembic`, миграции в `recipe/migrations/`
 
 ---
 

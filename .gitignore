@@ -17,6 +17,7 @@ volumes/
 
 # proj docs/specs
 *.docx
+out/docs/
 PROJECT_STATUS.md
 API_EXAMPLES.md
 

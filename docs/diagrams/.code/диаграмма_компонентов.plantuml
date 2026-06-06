@@ -1,17 +1,24 @@
 @startuml диаграмма_компонентов
 
-!theme mars
-skinparam shadowing true
-skinparam roundcorner 18
-skinparam backgroundcolor #F5F5DC
+skinparam shadowing false
+skinparam roundcorner 15
+skinparam backgroundcolor #F4F6F9
 skinparam defaultTextAlignment center
-skinparam component {
-  BorderColor black
-  FontColor black
-}
+skinparam ArrowColor #2B2D42
+skinparam ArrowThickness 2
+skinparam DefaultFontColor #1D1E2C
+
 skinparam package {
-  BorderColor black
-  FontColor black
+  BorderColor #2B2D42
+  FontColor #1D1E2C
+}
+skinparam component {
+  BorderColor #2B2D42
+  FontColor #1D1E2C
+}
+skinparam database {
+  BorderColor #2B2D42
+  FontColor #1D1E2C
 }
 
 package "Frontend (Vue)" #FFFACD {
