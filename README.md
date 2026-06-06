@@ -14,7 +14,7 @@
       <a href="https://swagger.io/"><img src="https://img.shields.io/badge/Swagger-85EA2D?style=for-the-badge&logo=swagger&logoColor=black" alt="Swagger" height="35"></a>
       <a href="https://git-scm.com/"><img src="https://img.shields.io/badge/Git-F05032?style=for-the-badge&logo=git&logoColor=white" alt="Git" height="35"></a>
       <a href="https://plantuml.com/"><img src="https://img.shields.io/badge/plantuml-e75480?style=for-the-badge&logo=uml" alt="PlantUML" height="35"></a>
-      <a href="LICENSE.md"><img src="https://img.shields.io/badge/MIT-yellow?style=for-the-badge&logo=readme&logoColor=white" alt="MIT" height="35"></a>
+      <a href="LICENSE.md"><img src="https://img.shields.io/badge/AGPLv3-yellow?style=for-the-badge&logo=readme&logoColor=white" alt="GNU Affero General Public License v3.0" height="35"></a>
 </div>
 
 ---
@@ -189,7 +189,7 @@ cook-book/
 
 ## Лицензия
 
-Проект распространяется под лицензией [MIT License](LICENSE.md).
+Проект распространяется под лицензией [GNU Affero General Public License v3.0](LICENSE.md).
 
 ---
 
