@@ -1,6 +1,5 @@
 import pytest
 from fastapi.testclient import TestClient
-from unittest.mock import patch
 from uuid import uuid4
 from slowapi.errors import RateLimitExceeded
 
@@ -24,12 +23,11 @@ def mock_jwt_user():
 class TestRateLimiting:
 
     def test_rate_limit_default_applied(self, client, mock_jwt_user):
-        with patch.object(limiter, 'key_func', return_value="test_ip"):
-            response = client.get(
-                "/health",
-                headers={"X-Forwarded-For": "192.168.1.1"}
-            )
-            assert response.status_code == 200
+        response = client.get(
+            "/health",
+            headers={"X-Forwarded-For": "192.168.1.1"}
+        )
+        assert response.status_code == 200
 
     def test_health_endpoint_no_limit(self, client):
         response = client.get("/health")
