@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, status, UploadFile, File, Query
+from fastapi import APIRouter, Depends, HTTPException, status, UploadFile, File, Query, Response
 from sqlalchemy.orm import Session
 from typing import List, Optional
 from uuid import UUID
@@ -8,12 +8,20 @@ import logging
 from ..database import get_db
 from ..auth.jwt import get_current_user
 from ..services.recipe_service import RecipeService
-from ..schemas.recipe import RecipeCreate, RecipeUpdate, RecipeResponse
+from ..schemas.recipe import RecipeCreate, RecipeUpdate, RecipeResponse, DifficultyLevels, DIFFICULTY_LEVELS, DIFFICULTY_TRANSLATIONS
 from ..utils.file_handler import save_image, delete_image
 
 logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/recipes", tags=["Рецепты"])
+
+
+@router.get("/difficulty-levels", response_model=DifficultyLevels, tags=["Справочники"])
+async def get_difficulty_levels():
+    return DifficultyLevels(
+        levels=DIFFICULTY_LEVELS,
+        translations=DIFFICULTY_TRANSLATIONS
+    )
 
 
 @router.post("/", response_model=RecipeResponse, status_code=status.HTTP_201_CREATED)
@@ -47,9 +55,8 @@ async def get_recipes(
         created_before=created_before,
         limit=limit,
         cursor=cursor
-)
+    )
 
-    from fastapi import Response
     response = Response()
     if next_cursor:
         response.headers["X-Next-Cursor"] = next_cursor
