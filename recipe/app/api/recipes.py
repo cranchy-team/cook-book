@@ -55,9 +55,8 @@ async def get_recipes(
         created_before=created_before,
         limit=limit,
         cursor=cursor
-)
+    )
 
-    from fastapi import Response
     response = Response()
     if next_cursor:
         response.headers["X-Next-Cursor"] = next_cursor

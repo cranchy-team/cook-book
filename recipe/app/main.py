@@ -48,9 +48,9 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
             "message": error["msg"],
             "type": error["type"]
         })
-    
+
     logger.warning(f"Validation error: {errors}")
-    
+
     return JSONResponse(
         status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
         content={
@@ -70,9 +70,9 @@ async def pydantic_validation_exception_handler(request: Request, exc: Validatio
             "message": error["msg"],
             "type": error["type"]
         })
-    
+
     logger.warning(f"Pydantic validation error: {errors}")
-    
+
     return JSONResponse(
         status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
         content={
@@ -86,7 +86,7 @@ async def pydantic_validation_exception_handler(request: Request, exc: Validatio
 @app.exception_handler(Exception)
 async def general_exception_handler(request: Request, exc: Exception):
     logger.error(f"Unhandled exception: {type(exc).__name__} - {str(exc)}")
-    
+
     return JSONResponse(
         status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
         content={

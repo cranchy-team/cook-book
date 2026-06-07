@@ -219,6 +219,6 @@ class RecipeResponse(RecipeBase):
 
 
 class DifficultyLevels(BaseModel):
-    
+    """Схема для перечисления уровней сложности."""
     levels: List[str] = DIFFICULTY_LEVELS
     translations: dict = DIFFICULTY_TRANSLATIONS
