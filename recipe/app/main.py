@@ -4,12 +4,16 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.responses import JSONResponse
 from fastapi.exceptions import RequestValidationError
 from pydantic import ValidationError
+from slowapi.errors import RateLimitExceeded
+from slowapi.middleware import SlowAPIMiddleware
+from slowapi import _rate_limit_exceeded_handler
 import os
 import logging
 from .config import get_settings
 from .database import engine, Base
 from .api import recipes_router, favorites_router
 from .models import Recipe, Favorite, User  # noqa: F401 pylint: disable=unused-import
+from .limiter import limiter
 
 logger = logging.getLogger(__name__)
 
@@ -24,6 +28,12 @@ app = FastAPI(
     docs_url="/docs",
     redoc_url="/redoc",
 )
+
+app.state.limiter = limiter
+
+app.add_middleware(SlowAPIMiddleware)
+
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
 os.makedirs(settings.UPLOAD_DIR, exist_ok=True)
 
@@ -85,6 +95,7 @@ async def pydantic_validation_exception_handler(request: Request, exc: Validatio
 
 @app.exception_handler(Exception)
 async def general_exception_handler(request: Request, exc: Exception):
+
     logger.error(f"Unhandled exception: {type(exc).__name__} - {str(exc)}")
 
     return JSONResponse(
@@ -96,16 +107,18 @@ async def general_exception_handler(request: Request, exc: Exception):
         }
     )
 
-
 app.include_router(recipes_router, prefix="/api/v1")
 app.include_router(favorites_router, prefix="/api/v1")
 
 
 @app.get("/health")
 async def health_check():
+    """Health check endpoint."""
     return {"status": "healthy", "service": "recipe-service"}
 
 
 @app.get("/")
 async def root():
+    """Root endpoint."""
     return {"message": "Cook Book Recipe Service", "version": "1.0.0"}
+

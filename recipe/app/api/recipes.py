@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, status, UploadFile, File, Query, Response
+from fastapi import APIRouter, Depends, HTTPException, status, UploadFile, File, Query, Response, Request
 from sqlalchemy.orm import Session
 from typing import List, Optional
 from uuid import UUID
@@ -10,6 +10,7 @@ from ..auth.jwt import get_current_user
 from ..services.recipe_service import RecipeService
 from ..schemas.recipe import RecipeCreate, RecipeUpdate, RecipeResponse, DifficultyLevels, DIFFICULTY_LEVELS, DIFFICULTY_TRANSLATIONS
 from ..utils.file_handler import save_image, delete_image
+from ..limiter import limiter
 
 logger = logging.getLogger(__name__)
 
@@ -17,7 +18,8 @@ router = APIRouter(prefix="/recipes", tags=["Рецепты"])
 
 
 @router.get("/difficulty-levels", response_model=DifficultyLevels, tags=["Справочники"])
-async def get_difficulty_levels():
+@limiter.limit("30 per minute")
+async def get_difficulty_levels(request: Request):
     return DifficultyLevels(
         levels=DIFFICULTY_LEVELS,
         translations=DIFFICULTY_TRANSLATIONS
@@ -25,7 +27,9 @@ async def get_difficulty_levels():
 
 
 @router.post("/", response_model=RecipeResponse, status_code=status.HTTP_201_CREATED)
+@limiter.limit("20 per minute")
 async def create_recipe(
+    request: Request,
     recipe_data: RecipeCreate,
     db: Session = Depends(get_db),
     user: dict = Depends(get_current_user)
@@ -36,7 +40,9 @@ async def create_recipe(
 
 
 @router.get("/", response_model=List[RecipeResponse])
+@limiter.limit("60 per minute")
 async def get_recipes(
+    request: Request,
     search: Optional[str] = Query(None, description="Поиск по названию и ингредиентам"),
     difficulty: Optional[str] = Query(None, description="Фильтр по сложности"),
     created_after: Optional[datetime] = Query(None, description="Дата создания от"),
@@ -65,7 +71,9 @@ async def get_recipes(
 
 
 @router.get("/{recipe_id}", response_model=RecipeResponse)
+@limiter.limit("60 per minute")
 async def get_recipe(
+    request: Request,
     recipe_id: UUID,
     db: Session = Depends(get_db),
     user: dict = Depends(get_current_user)
@@ -80,7 +88,9 @@ async def get_recipe(
 
 
 @router.put("/{recipe_id}", response_model=RecipeResponse)
+@limiter.limit("30 per minute")
 async def update_recipe(
+    request: Request,
     recipe_id: UUID,
     recipe_data: RecipeUpdate,
     db: Session = Depends(get_db),
@@ -96,7 +106,9 @@ async def update_recipe(
 
 
 @router.delete("/{recipe_id}", status_code=status.HTTP_204_NO_CONTENT)
+@limiter.limit("30 per minute")
 async def delete_recipe(
+    request: Request,
     recipe_id: UUID,
     db: Session = Depends(get_db),
     user: dict = Depends(get_current_user)
@@ -111,7 +123,9 @@ async def delete_recipe(
 
 
 @router.post("/{recipe_id}/upload-image", response_model=RecipeResponse)
+@limiter.limit("10 per minute")
 async def upload_recipe_image(
+    request: Request,
     recipe_id: UUID,
     image: UploadFile = File(..., description="Изображение рецепта"),
     db: Session = Depends(get_db),
