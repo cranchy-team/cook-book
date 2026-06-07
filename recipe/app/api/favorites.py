@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, Request
 from sqlalchemy.orm import Session
 from typing import List
 from uuid import UUID
@@ -10,6 +10,7 @@ from ..services.favorite_service import FavoriteService
 from ..models.favorite import Favorite
 from ..schemas.recipe import RecipeResponse
 from ..schemas.favorite import FavoriteResponse
+from ..limiter import limiter
 
 logger = logging.getLogger(__name__)
 
@@ -17,16 +18,13 @@ router = APIRouter(prefix="/favorites", tags=["Избранное"])
 
 
 @router.post("/{recipe_id}", response_model=FavoriteResponse)
+@limiter.limit("30 per minute")
 async def add_to_favorites(
+    request: Request,
     recipe_id: UUID,
     db: Session = Depends(get_db),
     user: dict = Depends(get_current_user)
 ):
-    """
-    Добавление рецепта в избранное.
-
-    Идемпотентная операция - если рецепт уже в избранном, вернет существующую запись.
-    """
     try:
         favorite = FavoriteService.add_to_favorites(db, user["user_id"], recipe_id)
         return favorite
@@ -38,14 +36,13 @@ async def add_to_favorites(
 
 
 @router.delete("/{recipe_id}", status_code=status.HTTP_204_NO_CONTENT)
+@limiter.limit("30 per minute")
 async def remove_from_favorites(
+    request: Request,
     recipe_id: UUID,
     db: Session = Depends(get_db),
     user: dict = Depends(get_current_user)
 ):
-    """
-    Удаление рецепта из избранного.
-    """
     success = FavoriteService.remove_from_favorites(db, user["user_id"], recipe_id)
     if not success:
         raise HTTPException(
@@ -56,27 +53,25 @@ async def remove_from_favorites(
 
 
 @router.get("/", response_model=List[RecipeResponse])
+@limiter.limit("60 per minute")
 async def get_favorites(
+    request: Request,
     limit: int = 50,
     db: Session = Depends(get_db),
     user: dict = Depends(get_current_user)
 ):
-    """
-    Получение списка избранных рецептов пользователя.
-    """
     favorites = FavoriteService.get_favorites(db, user["user_id"], limit)
     return favorites
 
 
 @router.get("/{recipe_id}/status", response_model=FavoriteResponse)
+@limiter.limit("60 per minute")
 async def check_favorite_status(
+    request: Request,
     recipe_id: UUID,
     db: Session = Depends(get_db),
     user: dict = Depends(get_current_user)
 ):
-    """
-    Проверка, есть ли рецепт в избранном.
-    """
     if not FavoriteService.is_favorite(db, user["user_id"], recipe_id):
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
